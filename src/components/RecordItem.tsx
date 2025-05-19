@@ -1,22 +1,29 @@
+import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import icons from "../constants/icons";
 
 type Props = {
   name: string;
-  duratiion: string;
+  duration: string;
 };
 
-const RecordItem = ({ name, duratiion }: Props) => {
+const RecordItem = ({ name, duration }: Props) => {
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
   return (
     <View style={styles.container}>
       <Text style={styles.info}>
-        {name} | {duratiion}
+        {name} | {duration}
       </Text>
       <View style={styles.action}>
-        <TouchableOpacity style={styles.play}>
-          <Text>Play</Text>
+        <TouchableOpacity
+          style={styles.play}
+          onPress={() => setIsPlaying(!isPlaying)}
+        >
+          {isPlaying ? icons.pause : icons.play}
         </TouchableOpacity>
         <TouchableOpacity style={styles.delete}>
-          <Text>Stop</Text>
+          {icons.delete}
         </TouchableOpacity>
       </View>
     </View>
@@ -31,7 +38,7 @@ const styles = StyleSheet.create({
     borderColor: "#000000",
     borderWidth: 1,
     borderRadius: 10,
-    padding: 12,
+    padding: 20,
     marginBottom: 12,
   },
   info: {

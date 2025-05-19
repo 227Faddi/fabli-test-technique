@@ -16,8 +16,11 @@ const Home = () => {
     >
       <View style={styles.container}>
         <Text style={styles.title}>Mes enregistrements</Text>
-        <View>
-          <RecordItem name={"Audio-01"} duratiion={"00:20"} />
+        <View style={styles.recordList}>
+          <RecordItem name={"Audio-01"} duration={"00:20"} />
+          <RecordItem name={"Audio-01"} duration={"00:20"} />
+          <RecordItem name={"Audio-01"} duration={"00:20"} />
+          <RecordItem name={"Audio-01"} duration={"00:20"} />
         </View>
         <View style={styles.recordBtnContainer}>
           <TouchableOpacity style={styles.recordBtn}>
@@ -36,22 +39,15 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "space-between",
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderColor: "#000000",
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 16,
+    gap: 36,
   },
   title: {
     fontSize: 22,
     color: "#000000",
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 20,
   },
+  recordList: { flex: 1, gap: 4 },
   recordBtnContainer: {
     alignItems: "center",
     marginTop: 20,
@@ -65,6 +61,7 @@ const styles = StyleSheet.create({
   },
   recordBtnText: {
     color: "#000000",
+    fontWeight: "bold",
     fontSize: 18,
   },
 });
