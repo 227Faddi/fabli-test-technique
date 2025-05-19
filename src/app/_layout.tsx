@@ -7,15 +7,14 @@ const RootLayout = () => {
       <Stack
         screenOptions={{
           contentStyle: {
-            backgroundColor: "transparent",
+            backgroundColor: "#FFFFFF",
           },
         }}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen
-          name="modal"
+          name="record"
           options={{
-            presentation: "modal",
             headerShown: false,
           }}
         />
