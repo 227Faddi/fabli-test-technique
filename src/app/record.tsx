@@ -1,10 +1,28 @@
+import { AudioModule, RecordingPresets, useAudioRecorder } from "expo-audio";
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import BackButton from "../components/BackButton";
 import icons from "../constants/icons";
 
 const Record = () => {
-  const [isRecording, setIsRecording] = useState<boolean>(false);
+  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+  const [isRecording, setIsRecording] = useState(false);
+
+  const record = async () => {
+    const status = await AudioModule.requestRecordingPermissionsAsync();
+    if (!status.granted) {
+      Alert.alert("Permission to access microphone was denied");
+    }
+    await audioRecorder.prepareToRecordAsync();
+    audioRecorder.record();
+    setIsRecording(true);
+  };
+
+  const stopRecording = async () => {
+    await audioRecorder.stop();
+    setIsRecording(false);
+  };
+
   return (
     <View style={styles.container}>
       <BackButton />
@@ -15,7 +33,7 @@ const Record = () => {
       <View style={styles.recordBtnContainer}>
         <TouchableOpacity
           style={styles.recordBtn}
-          onPress={() => setIsRecording(!isRecording)}
+          onPress={isRecording ? stopRecording : record}
         >
           {isRecording ? icons.stop : icons.mic}
         </TouchableOpacity>

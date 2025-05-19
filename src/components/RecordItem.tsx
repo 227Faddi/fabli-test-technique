@@ -8,7 +8,7 @@ type Props = {
 };
 
 const RecordItem = ({ name, duration }: Props) => {
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   return (
     <View style={styles.container}>
