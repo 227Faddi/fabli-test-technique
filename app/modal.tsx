@@ -1,11 +1,9 @@
-import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
-const Home = () => {
+const Modal = () => {
   return (
     <View style={styles.container}>
-      <Text>Home screen</Text>
-      <Link href="/modal">Open modal</Link>
+      <Text>Recording Screen</Text>
     </View>
   );
 };
@@ -18,4 +16,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Modal;
