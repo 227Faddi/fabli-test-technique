@@ -80,6 +80,9 @@ const Record = () => {
     const filename = generateFileName();
     await saveRecordingFile(uri, filename);
 
+    const i = audioRecorder.currentTime;
+    console.log(audioRecorder);
+
     const newRecordings = await getSavedRecordings();
     setRecordings(newRecordings as Recordings);
 

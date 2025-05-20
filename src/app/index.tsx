@@ -37,14 +37,16 @@ const Home = () => {
               </Text>
             </View>
           ) : (
-            recordings.map((item, index) => (
-              <RecordItem
-                key={index}
-                name={item.name}
-                duration={"00:02"}
-                uri={item.uri}
-              />
-            ))
+            recordings
+              .sort((a, b) => b.name.localeCompare(a.name))
+              .map((item, index) => (
+                <RecordItem
+                  key={index}
+                  name={item.name}
+                  duration={"00:02"}
+                  uri={item.uri}
+                />
+              ))
           )}
         </View>
         <View style={styles.recordBtnContainer}>

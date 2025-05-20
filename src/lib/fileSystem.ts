@@ -18,7 +18,7 @@ export const saveRecordingFile = async (uri: string, filename: string) => {
 export const getSavedRecordings = async () => {
   try {
     const files = await FileSystem.readDirectoryAsync(
-      FileSystem.documentDirectory!
+      FileSystem.documentDirectory as string
     );
     const recordings = files
       .filter((file) => file.endsWith(".m4a"))
