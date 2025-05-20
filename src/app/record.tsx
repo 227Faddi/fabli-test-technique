@@ -1,40 +1,77 @@
-import { AudioModule, RecordingPresets, useAudioRecorder } from "expo-audio";
+import { RecordingPresets, useAudioRecorder } from "expo-audio";
 import { router } from "expo-router";
-import { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useRef, useState } from "react";
+import {
+  Alert,
+  Linking,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import BackButton from "../components/BackButton";
 import icons from "../constants/icons";
 import { saveRecordingFile } from "../lib/fileSystem";
+import { formatTime, generateFileName } from "../lib/format";
+import { getPermission } from "../lib/permission";
 
 const Record = () => {
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const [isRecording, setIsRecording] = useState(false);
 
-  const getPermission = async () => {
-    const status = await AudioModule.requestRecordingPermissionsAsync();
-    if (!status.granted) {
-      Alert.alert("Permission to access microphone was denied");
-    }
-  };
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const record = async () => {
-    getPermission();
+    const hasPermission = await getPermission();
+
+    if (!hasPermission) {
+      Alert.alert(
+        "Microphone Permission Required",
+        "Please enable microphone access in settings.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              if (Platform.OS === "ios") {
+                Linking.openURL("app-settings:");
+              } else {
+                Linking.openSettings();
+              }
+            },
+          },
+        ]
+      );
+      return;
+    }
+
     await audioRecorder.prepareToRecordAsync();
     audioRecorder.record();
     setIsRecording(true);
+
+    timerRef.current = setInterval(() => {
+      setElapsedSeconds((prev) => prev + 1);
+    }, 1000);
   };
 
   const stopRecording = async () => {
     await audioRecorder.stop();
     const { uri } = audioRecorder;
+
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+
     if (!uri) {
       alert("Error");
       return;
     }
-    const filename = `${Date.now()}.m4a`;
+    const filename = generateFileName();
     await saveRecordingFile(uri, filename);
     setIsRecording(false);
-    alert("Saved");
     router.back();
   };
 
@@ -43,7 +80,7 @@ const Record = () => {
       <BackButton />
       <Text style={styles.title}>Enregistrer</Text>
       <View style={styles.timeContainer}>
-        <Text style={styles.time}>00:00:00</Text>
+        <Text style={styles.time}>{formatTime(elapsedSeconds)}</Text>
       </View>
       <View style={styles.recordBtnContainer}>
         <TouchableOpacity
