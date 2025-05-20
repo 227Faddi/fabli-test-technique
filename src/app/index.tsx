@@ -12,6 +12,7 @@ import {
   RecordContext,
   RecordContextType,
 } from "../contexts/RecordContextProvider";
+import { formatDuration } from "../lib/format";
 
 const Home = () => {
   const { recordings } = useContext(RecordContext) as RecordContextType;
@@ -42,8 +43,8 @@ const Home = () => {
               .map((item, index) => (
                 <RecordItem
                   key={index}
-                  name={item.name}
-                  duration={"00:02"}
+                  name={item.name.replace(".m4a", "")}
+                  duration={formatDuration(item.name)}
                   uri={item.uri}
                 />
               ))

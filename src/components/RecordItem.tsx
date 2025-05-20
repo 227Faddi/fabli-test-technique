@@ -71,9 +71,10 @@ const RecordItem = ({ name, duration, uri }: Props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.info}>
-        {name.replace(".m4a", "")} | {duration}
-      </Text>
+      <View>
+        <Text style={styles.info}>{name}</Text>
+        <Text style={styles.duration}>{duration}</Text>
+      </View>
       <View style={styles.action}>
         <TouchableOpacity
           style={styles.play}
@@ -100,7 +101,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   info: {
-    color: "#000000",
+    fontSize: 16,
+    flex: 1,
+  },
+  duration: {
+    fontWeight: "bold",
     fontSize: 16,
     flex: 1,
   },

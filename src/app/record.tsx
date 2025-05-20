@@ -1,4 +1,8 @@
-import { RecordingPresets, useAudioRecorder } from "expo-audio";
+import {
+  RecordingPresets,
+  useAudioRecorder,
+  useAudioRecorderState,
+} from "expo-audio";
 import { router } from "expo-router";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
@@ -27,6 +31,8 @@ const Record = () => {
   ) as RecordContextType;
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const [isRecording, setIsRecording] = useState(false);
+  const { durationMillis } = useAudioRecorderState(audioRecorder, 500);
+
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -77,11 +83,9 @@ const Record = () => {
       return;
     }
 
-    const filename = generateFileName();
-    await saveRecordingFile(uri, filename);
+    const filename = generateFileName(durationMillis);
 
-    const i = audioRecorder.currentTime;
-    console.log(audioRecorder);
+    await saveRecordingFile(uri, filename);
 
     const newRecordings = await getSavedRecordings();
     setRecordings(newRecordings as Recordings);
