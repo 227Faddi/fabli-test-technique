@@ -10,11 +10,15 @@ const Record = () => {
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const [isRecording, setIsRecording] = useState(false);
 
-  const record = async () => {
+  const getPermission = async () => {
     const status = await AudioModule.requestRecordingPermissionsAsync();
     if (!status.granted) {
       Alert.alert("Permission to access microphone was denied");
     }
+  };
+
+  const record = async () => {
+    getPermission();
     await audioRecorder.prepareToRecordAsync();
     audioRecorder.record();
     setIsRecording(true);

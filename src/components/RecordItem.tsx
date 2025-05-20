@@ -1,22 +1,29 @@
-import { useAudioPlayer } from "expo-audio";
+import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import * as FileSystem from "expo-file-system";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import icons from "../constants/icons";
 
 type Props = {
   name: string;
   duration: string;
-  uri: any;
+  uri: string;
 };
 
 const RecordItem = ({ name, duration, uri }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const player = useAudioPlayer({ uri: uri });
+  const player = useAudioPlayer({ uri: uri }, 1);
+  const { didJustFinish } = useAudioPlayerStatus(player);
 
-  const playRecord = async () => {
-    player.play();
+  const playRecord = () => {
+    player.seekTo(0);
     setIsPlaying(true);
+    player.play();
+  };
+
+  const pauseRecord = () => {
+    setIsPlaying(false);
+    player.pause();
   };
 
   const deleteRecord = async () => {
@@ -27,13 +34,22 @@ const RecordItem = ({ name, duration, uri }: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (didJustFinish) {
+      setIsPlaying(false);
+    }
+  }, [didJustFinish]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.info}>
         {name} | {duration}
       </Text>
       <View style={styles.action}>
-        <TouchableOpacity style={styles.play} onPress={playRecord}>
+        <TouchableOpacity
+          style={styles.play}
+          onPress={isPlaying ? pauseRecord : playRecord}
+        >
           {isPlaying ? icons.pause : icons.play}
         </TouchableOpacity>
         <TouchableOpacity style={styles.delete} onPress={deleteRecord}>
@@ -49,7 +65,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderColor: "#000000",
     borderWidth: 1,
     borderRadius: 10,
     padding: 20,
