@@ -1,6 +1,6 @@
 import { RecordingPresets, useAudioRecorder } from "expo-audio";
 import { router } from "expo-router";
-import { useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   Alert,
   Linking,
@@ -12,14 +12,21 @@ import {
 } from "react-native";
 import BackButton from "../components/BackButton";
 import icons from "../constants/icons";
-import { saveRecordingFile } from "../lib/fileSystem";
+import {
+  RecordContext,
+  RecordContextType,
+  Recordings,
+} from "../contexts/RecordContextProvider";
+import { getSavedRecordings, saveRecordingFile } from "../lib/fileSystem";
 import { formatTime, generateFileName } from "../lib/format";
 import { getPermission } from "../lib/permission";
 
 const Record = () => {
+  const { setRecordings, setCurrentPlayingUri } = useContext(
+    RecordContext
+  ) as RecordContextType;
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const [isRecording, setIsRecording] = useState(false);
-
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -28,12 +35,12 @@ const Record = () => {
 
     if (!hasPermission) {
       Alert.alert(
-        "Microphone Permission Required",
-        "Please enable microphone access in settings.",
+        "Autorisation du microphone requise",
+        "Veuillez activer l'accès au microphone dans les paramètres.",
         [
-          { text: "Cancel", style: "cancel" },
+          { text: "Annuler", style: "cancel" },
           {
-            text: "Open Settings",
+            text: "Ouvrir les paramètres",
             onPress: () => {
               if (Platform.OS === "ios") {
                 Linking.openURL("app-settings:");
@@ -69,11 +76,20 @@ const Record = () => {
       alert("Error");
       return;
     }
+
     const filename = generateFileName();
     await saveRecordingFile(uri, filename);
+
+    const newRecordings = await getSavedRecordings();
+    setRecordings(newRecordings as Recordings);
+
     setIsRecording(false);
     router.back();
   };
+
+  useEffect(() => {
+    setCurrentPlayingUri(null);
+  }, [setCurrentPlayingUri]);
 
   return (
     <View style={styles.container}>

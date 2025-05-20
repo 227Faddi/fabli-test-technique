@@ -1,6 +1,12 @@
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import { useContext } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import RecordItem from "../components/RecordItem";
 import {
   RecordContext,
@@ -26,7 +32,9 @@ const Home = () => {
                 justifyContent: "center",
               }}
             >
-              <Text>No Recordings</Text>
+              <Text style={styles.recordMessage}>
+                Vous n’avez encore aucun enregistrement.
+              </Text>
             </View>
           ) : (
             recordings.map((item, index) => (
@@ -40,9 +48,9 @@ const Home = () => {
           )}
         </View>
         <View style={styles.recordBtnContainer}>
-          <Link href="/record" style={styles.recordBtn}>
-            Enregistrer
-          </Link>
+          <TouchableOpacity onPress={() => router.push("/record")}>
+            <Text style={styles.recordBtn}>Enregistrer</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -63,6 +71,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   recordList: { flex: 1, gap: 4 },
+  recordMessage: { fontSize: 16 },
   recordBtnContainer: {
     alignItems: "center",
     marginTop: 20,

@@ -1,7 +1,7 @@
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import * as FileSystem from "expo-file-system";
 import { useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import icons from "../constants/icons";
 import {
   RecordContext,
@@ -17,7 +17,9 @@ type Props = {
 };
 
 const RecordItem = ({ name, duration, uri }: Props) => {
-  const { setRecordings } = useContext(RecordContext) as RecordContextType;
+  const { setRecordings, currentPlayingUri, setCurrentPlayingUri } = useContext(
+    RecordContext
+  ) as RecordContextType;
   const [isPlaying, setIsPlaying] = useState(false);
   const player = useAudioPlayer({ uri: uri }, 1);
   const { didJustFinish } = useAudioPlayerStatus(player);
@@ -26,33 +28,51 @@ const RecordItem = ({ name, duration, uri }: Props) => {
     player.seekTo(0);
     setIsPlaying(true);
     player.play();
+    setCurrentPlayingUri(uri);
   };
 
   const pauseRecord = () => {
     setIsPlaying(false);
     player.pause();
+    setCurrentPlayingUri(null);
   };
 
-  const deleteRecord = async () => {
-    try {
-      await FileSystem.deleteAsync(uri);
-      const newRecordings = await getSavedRecordings();
-      setRecordings(newRecordings as Recordings);
-    } catch {
-      alert("Error during delete process");
-    }
+  const deleteRecord = () => {
+    Alert.alert("Supprimer l'enregistrement", "Êtes-vous sûr?", [
+      { text: "Annuler", style: "cancel" },
+      {
+        text: "Supprimer",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await FileSystem.deleteAsync(uri);
+            const newRecordings = await getSavedRecordings();
+            setRecordings(newRecordings as Recordings);
+          } catch {
+            alert("Error during delete process");
+          }
+        },
+      },
+    ]);
   };
 
   useEffect(() => {
     if (didJustFinish) {
       setIsPlaying(false);
+      setCurrentPlayingUri(null);
     }
-  }, [didJustFinish]);
+  }, [didJustFinish, setCurrentPlayingUri]);
+
+  useEffect(() => {
+    if (currentPlayingUri !== uri && isPlaying) {
+      pauseRecord();
+    }
+  }, [currentPlayingUri, uri, isPlaying]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.info}>
-        {name} | {duration}
+        {name.replace(".m4a", "")} | {duration}
       </Text>
       <View style={styles.action}>
         <TouchableOpacity
