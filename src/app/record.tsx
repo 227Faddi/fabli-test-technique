@@ -1,8 +1,10 @@
 import { AudioModule, RecordingPresets, useAudioRecorder } from "expo-audio";
+import { router } from "expo-router";
 import { useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import BackButton from "../components/BackButton";
 import icons from "../constants/icons";
+import { saveRecordingFile } from "../lib/fileSystem";
 
 const Record = () => {
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
@@ -20,7 +22,16 @@ const Record = () => {
 
   const stopRecording = async () => {
     await audioRecorder.stop();
+    const { uri } = audioRecorder;
+    if (!uri) {
+      alert("Error");
+      return;
+    }
+    const filename = `${Date.now()}.m4a`;
+    await saveRecordingFile(uri, filename);
     setIsRecording(false);
+    alert("Saved");
+    router.back();
   };
 
   return (

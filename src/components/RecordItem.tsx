@@ -1,3 +1,5 @@
+import { useAudioPlayer } from "expo-audio";
+import * as FileSystem from "expo-file-system";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import icons from "../constants/icons";
@@ -5,10 +7,25 @@ import icons from "../constants/icons";
 type Props = {
   name: string;
   duration: string;
+  uri: any;
 };
 
-const RecordItem = ({ name, duration }: Props) => {
+const RecordItem = ({ name, duration, uri }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const player = useAudioPlayer({ uri: uri });
+
+  const playRecord = async () => {
+    player.play();
+    setIsPlaying(true);
+  };
+
+  const deleteRecord = async () => {
+    try {
+      await FileSystem.deleteAsync(uri);
+    } catch {
+      alert("Error during delete process");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -16,13 +33,10 @@ const RecordItem = ({ name, duration }: Props) => {
         {name} | {duration}
       </Text>
       <View style={styles.action}>
-        <TouchableOpacity
-          style={styles.play}
-          onPress={() => setIsPlaying(!isPlaying)}
-        >
+        <TouchableOpacity style={styles.play} onPress={playRecord}>
           {isPlaying ? icons.pause : icons.play}
         </TouchableOpacity>
-        <TouchableOpacity style={styles.delete}>
+        <TouchableOpacity style={styles.delete} onPress={deleteRecord}>
           {icons.delete}
         </TouchableOpacity>
       </View>

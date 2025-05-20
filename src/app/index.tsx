@@ -1,8 +1,26 @@
 import { Link } from "expo-router";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import RecordItem from "../components/RecordItem";
+import { getSavedRecordings } from "../lib/fileSystem";
 
 const Home = () => {
+  const [recordings, setRecordings] = useState<{ name: string; uri: string }[]>(
+    []
+  );
+
+  useEffect(() => {
+    const loadRecordings = async () => {
+      const savedValues = await getSavedRecordings();
+      if (savedValues) {
+        setRecordings(savedValues);
+      } else {
+        alert("Error loading recordings");
+      }
+    };
+    loadRecordings();
+  }, []);
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -11,10 +29,26 @@ const Home = () => {
       <View style={styles.container}>
         <Text style={styles.title}>Mes enregistrements</Text>
         <View style={styles.recordList}>
-          <RecordItem name={"Audio-01"} duration={"00:20"} />
-          <RecordItem name={"Audio-01"} duration={"00:20"} />
-          <RecordItem name={"Audio-01"} duration={"00:20"} />
-          <RecordItem name={"Audio-01"} duration={"00:20"} />
+          {recordings.length === 0 ? (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text>No Recordings</Text>
+            </View>
+          ) : (
+            recordings.map((item, index) => (
+              <RecordItem
+                key={index}
+                name={item.name}
+                duration={"00:02"}
+                uri={item.uri}
+              />
+            ))
+          )}
         </View>
         <View style={styles.recordBtnContainer}>
           <Link href="/record" style={styles.recordBtn}>
