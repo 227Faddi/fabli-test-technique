@@ -1,8 +1,14 @@
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import * as FileSystem from "expo-file-system";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import icons from "../constants/icons";
+import {
+  RecordContext,
+  RecordContextType,
+  Recordings,
+} from "../contexts/RecordContextProvider";
+import { getSavedRecordings } from "../lib/fileSystem";
 
 type Props = {
   name: string;
@@ -11,6 +17,7 @@ type Props = {
 };
 
 const RecordItem = ({ name, duration, uri }: Props) => {
+  const { setRecordings } = useContext(RecordContext) as RecordContextType;
   const [isPlaying, setIsPlaying] = useState(false);
   const player = useAudioPlayer({ uri: uri }, 1);
   const { didJustFinish } = useAudioPlayerStatus(player);
@@ -29,6 +36,8 @@ const RecordItem = ({ name, duration, uri }: Props) => {
   const deleteRecord = async () => {
     try {
       await FileSystem.deleteAsync(uri);
+      const newRecordings = await getSavedRecordings();
+      setRecordings(newRecordings as Recordings);
     } catch {
       alert("Error during delete process");
     }

@@ -1,25 +1,14 @@
 import { Link } from "expo-router";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import RecordItem from "../components/RecordItem";
-import { getSavedRecordings } from "../lib/fileSystem";
+import {
+  RecordContext,
+  RecordContextType,
+} from "../contexts/RecordContextProvider";
 
 const Home = () => {
-  const [recordings, setRecordings] = useState<{ name: string; uri: string }[]>(
-    []
-  );
-
-  useEffect(() => {
-    const loadRecordings = async () => {
-      const savedValues = await getSavedRecordings();
-      if (savedValues) {
-        setRecordings(savedValues);
-      } else {
-        alert("Error loading recordings");
-      }
-    };
-    loadRecordings();
-  }, []);
+  const { recordings } = useContext(RecordContext) as RecordContextType;
 
   return (
     <ScrollView
