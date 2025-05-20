@@ -40,9 +40,9 @@ const Home = () => {
           ) : (
             recordings
               .sort((a, b) => b.name.localeCompare(a.name))
-              .map((item, index) => (
+              .map((item) => (
                 <RecordItem
-                  key={index}
+                  key={item.name}
                   name={item.name.replace(".m4a", "")}
                   duration={formatDuration(item.name)}
                   uri={item.uri}
@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    color: "#000000",
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -85,7 +84,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 12,
     padding: 26,
-    color: "#000000",
     fontWeight: "bold",
     fontSize: 18,
   },

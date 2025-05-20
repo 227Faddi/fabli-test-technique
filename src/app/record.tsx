@@ -126,7 +126,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    color: "#000000",
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -138,12 +137,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   recordBtn: {
-    borderColor: "#000000",
     borderWidth: 1,
     borderRadius: 12,
     padding: 26,
-    color: "#000000",
-    fontWeight: "bold",
     fontSize: 18,
   },
 });

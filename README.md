@@ -23,12 +23,6 @@ https://github.com/user-attachments/assets/fd9edfe7-54f1-4a56-8186-70ef6618ca85
 
 ## 🛠️ Installation & Configuration
 
-### Prérequis
-
-- [Node.js](https://nodejs.org/)
-- [Expo CLI](https://docs.expo.dev/get-started/installation/) (`npm install -g expo-cli`)
-- Git
-
 ### Démarrage
 
 ```bash
@@ -39,8 +33,11 @@ cd fabli-test-technique
 # Installer les dépendances
 npm install
 
-# Lancer l'application
+# Lancer Expo
 npm start
+
+# Appuyer sur "a" dans le terminal pour ouvrir le simulateur Android
+# Appuyer sur "i" dans le terminal pour ouvrir le simulateur iOS
 ```
 
 ### IOS Build
