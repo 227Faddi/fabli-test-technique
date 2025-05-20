@@ -1,50 +1,56 @@
-# Welcome to your Expo app 👋
+# 🎙️ Expo Audio Recorder App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Une application d’enregistrement audio minimaliste développée avec **Expo** et **TypeScript**.
+L’application permet aux utilisateurs d’enregistrer de l’audio, de le sauvegarder localement et de le réécouter plus tard.
 
-## Get started
+https://github.com/user-attachments/assets/fd9edfe7-54f1-4a56-8186-70ef6618ca85
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## 🚀 Fonctionnalités
 
-2. Start the app
+- Démarrer/Arrêter l’enregistrement audio
+- Indicateur visuel pendant l’enregistrement
+- Stockage local avec `expo-file-system`
+- Lecture avec les boutons Lecture/Pause
+- Noms de fichiers basés sur un horodatage
+- Affichage de la durée de l’enregistrement
+- Suppression des enregistrements
+- Gestion des permissions
+- Support des plateformes : Android & iOS
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🛠️ Installation & Configuration
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Prérequis
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- [Node.js](https://nodejs.org/)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/) (`npm install -g expo-cli`)
+- Git
 
-## Get a fresh project
-
-When you're ready, run:
+### Démarrage
 
 ```bash
-npm run reset-project
+# Cloner le dépôt
+git clone https://github.com/227Faddi/fabli-test-technique
+cd fabli-test-technique
+
+# Installer les dépendances
+npm install
+
+# Lancer l'application
+npm start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### IOS Build
 
-## Learn more
+```bash
+npx expo run:ios
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### Android Build
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+npx expo run:android
+```
